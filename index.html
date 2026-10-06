@@ -114,8 +114,8 @@
                         <svg class="w-7 h-7 text-[#f3b217]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </div>
                     <div>
-                        <h1 class="font-fantasy text-xl sm:text-2xl tracking-wider text-[#f3b217] font-bold">RingsDB Filters</h1>
-                        <p class="text-[11px] text-amber-200/80 font-medium hidden sm:block">LotR LCG Card Pool Filter Generator</p>
+                        <h1 class="font-fantasy text-xl sm:text-2xl tracking-wider text-[#f3b217] font-bold">RingsDB Filter</h1>
+                        <p class="text-[11px] text-white font-medium hidden sm:block">LotR LCG Card Pool Filter Generator</p>
                     </div>
                 </div>
 
@@ -186,8 +186,8 @@
             </div>
 
             <!-- RIGHT FLOATING SIDEBAR (Selected Packs Tree View) -->
-            <aside class="w-full lg:w-72 xl:w-80 shrink-0 lg:sticky lg:top-24 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-5 shadow-lg flex flex-col gap-4 z-40 max-h-[calc(100vh-7rem)] overflow-hidden">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <aside class="w-full lg:w-72 xl:w-80 shrink-0 lg:sticky lg:top-24 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-5 shadow-lg flex flex-col gap-4 z-40 overflow-hidden">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 shrink-0">
                     <div class="flex items-center gap-2">
                         <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
                         <h2 class="font-fantasy text-sm font-bold text-amber-800 uppercase tracking-wider">Selected Sets</h2>
@@ -195,8 +195,8 @@
                     <span id="selected-count-badge" class="text-xs bg-amber-100 text-amber-800 font-mono font-bold px-2.5 py-0.5 rounded-full border border-amber-300">0</span>
                 </div>
 
-                <!-- Tree View List Container -->
-                <div id="selected-tree-container" class="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 min-h-[160px]">
+                <!-- Tree View List Container (Generous bottom padding prevents last items from being covered) -->
+                <div id="selected-tree-container" class="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 min-h-0 pb-12">
                     <!-- Selected tree elements injected here -->
                 </div>
             </aside>
@@ -424,24 +424,31 @@
                 if (matchingPacks.length === 0) return;
 
                 const cycleCard = document.createElement('div');
-                cycleCard.className = 'bg-white border border-slate-200 rounded-2xl p-5 shadow-md overflow-hidden relative transition-all duration-300';
+                cycleCard.className = 'border rounded-2xl p-5 shadow-md overflow-hidden relative transition-all duration-300';
+                
+                // Light pastel tint version of cycle color for element background
+                const cardBgColor = cycle.color === '#000000' ? '#f8fafc' : `${cycle.color}0d`;
+                const cardBorderColor = cycle.color === '#000000' ? '#cbd5e1' : `${cycle.color}35`;
+                cycleCard.style.backgroundColor = cardBgColor;
+                cycleCard.style.borderColor = cardBorderColor;
                 cycleCard.style.borderLeft = `6px solid ${cycle.color === '#000000' ? '#475569' : cycle.color}`;
 
                 // Cycle Header
                 const cycleHeader = document.createElement('div');
-                cycleHeader.className = 'flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 mb-4 border-b border-slate-200 gap-2';
+                cycleHeader.className = 'flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 mb-4 border-b border-slate-200/80 gap-2';
 
                 const cycleTitle = document.createElement('div');
                 cycleTitle.className = 'flex items-center gap-2.5';
-                
+
                 const colorDot = document.createElement('span');
-                colorDot.className = 'w-3.5 h-3.5 rounded-full shrink-0 shadow-sm';
+                colorDot.className = 'w-3.5 h-3.5 rounded-full shrink-0 shadow-sm border border-black/10';
                 colorDot.style.backgroundColor = cycle.color === '#000000' ? '#475569' : cycle.color;
 
                 cycleTitle.appendChild(colorDot);
 
                 const titleText = document.createElement('h2');
-                titleText.className = 'font-fantasy text-lg sm:text-xl font-bold tracking-wide text-slate-900';
+                titleText.className = 'font-fantasy text-lg sm:text-xl font-bold tracking-wide';
+                titleText.style.color = cycle.color === '#000000' ? '#1e293b' : cycle.color;
                 titleText.innerText = cycle.cycleName;
                 cycleTitle.appendChild(titleText);
 
@@ -476,21 +483,24 @@
                     const isChecked = selectedPackCodes.has(pack.code);
                     
                     const activeColor = cycle.color === '#000000' ? '#3b82f6' : cycle.color;
+                    const textCycleColor = cycle.color === '#000000' ? '#1e293b' : cycle.color;
 
                     if (isChecked) {
                         packLabel.className = 'flex items-center gap-3.5 p-3.5 rounded-xl border transition-all cursor-pointer shadow-sm group';
-                        packLabel.style.backgroundColor = `${activeColor}12`;
+                        packLabel.style.backgroundColor = `${activeColor}22`;
                         packLabel.style.borderColor = activeColor;
                     } else {
-                        packLabel.className = 'flex items-center gap-3.5 p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-800 hover:border-amber-400 hover:bg-white transition-all cursor-pointer shadow-sm group';
+                        packLabel.className = 'flex items-center gap-3.5 p-3.5 rounded-xl border transition-all cursor-pointer shadow-sm group hover:border-amber-400';
+                        packLabel.style.backgroundColor = cycle.color === '#000000' ? '#ffffff' : `${activeColor}0a`;
+                        packLabel.style.borderColor = `${activeColor}25`;
                     }
 
                     packLabel.innerHTML = `
                         <input type="checkbox" class="checkbox-fantasy" ${isChecked ? 'checked' : ''} data-code="${pack.code}">
                         <div class="flex flex-col min-w-0 flex-1">
-                            <span class="text-sm font-bold leading-tight ${isChecked ? 'text-slate-900' : 'text-slate-800 group-hover:text-amber-800'} transition-colors">${pack.name}</span>
+                            <span class="text-sm font-bold leading-tight transition-colors" style="color: ${textCycleColor}">${pack.name}</span>
                             <div class="flex items-center gap-2 text-xs text-slate-500 mt-1 font-mono font-medium">
-                                <span class="bg-slate-200/80 px-1.5 py-0.2 rounded text-[11px] text-slate-700 font-bold" style="color: ${isChecked ? activeColor : 'inherit'}">e:${pack.code}</span>
+                                <span class="bg-slate-200/80 px-1.5 py-0.2 rounded text-[11px] font-bold" style="color: ${textCycleColor}">e:${pack.code}</span>
                                 <span>•</span>
                                 <span>${pack.release_date}</span>
                             </div>
@@ -630,7 +640,7 @@
                         packLeaf.innerHTML = `
                             <div class="flex items-center gap-2 min-w-0 flex-1 pr-2">
                                 <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                <span class="text-slate-800 font-semibold truncate text-[11px]" title="${pack.name}">${pack.name}</span>
+                                <span class="font-semibold truncate text-[11px]" style="color: ${nodeBorderColor}" title="${pack.name}">${pack.name}</span>
                             </div>
                             <div class="flex items-center gap-1.5 shrink-0">
                                 <span class="font-mono text-[10px] font-bold" style="color: ${nodeBorderColor}">${pack.code}</span>
