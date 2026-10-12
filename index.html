@@ -143,7 +143,7 @@
         <div class="flex flex-col lg:flex-row gap-6 items-start">
             
             <!-- LEFT FLOATING SIDEBAR (Controls & Search) -->
-            <aside class="w-full lg:w-64 xl:w-72 shrink-0 lg:sticky lg:top-24 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-5 shadow-lg flex flex-col gap-5 z-40">
+            <aside class="w-full lg:w-64 xl:w-72 shrink-0 lg:sticky lg:top-24 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-3 shadow-lg flex flex-col gap-5 z-40">
                 
                 <!-- Search Input -->
                 <div>
@@ -186,7 +186,7 @@
             </div>
 
             <!-- RIGHT FLOATING SIDEBAR (Selected Packs Tree View) -->
-            <aside class="w-full lg:w-72 xl:w-80 shrink-0 lg:sticky lg:top-24 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-5 shadow-lg flex flex-col gap-4 z-40 overflow-hidden">
+            <aside class="w-full lg:w-72 xl:w-80 shrink-0 lg:sticky lg:top-24 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-3 shadow-lg flex flex-col gap-4 z-40 overflow-hidden">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-200 shrink-0">
                     <div class="flex items-center gap-2">
                         <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
@@ -205,7 +205,7 @@
     </main>
 
     <footer class="bg-white py-6 text-center text-slate-500 text-xs border-t border-slate-200 mt-auto shadow-inner">
-        <p>Official LOTR LCG Data Filter Builder for <a href="https://ringsdb.com" target="_blank" class="text-amber-700 font-semibold hover:underline">RingsDB</a></p>
+        <p>LOTR LCG Data Filter Builder for <a href="https://ringsdb.com" target="_blank" class="text-amber-700 font-semibold hover:underline">RingsDB</a>, it is an unofficial fan-made website.</p>
     </footer>
 
     <script>
@@ -424,7 +424,7 @@
                 if (matchingPacks.length === 0) return;
 
                 const cycleCard = document.createElement('div');
-                cycleCard.className = 'border rounded-2xl p-5 shadow-md overflow-hidden relative transition-all duration-300';
+                cycleCard.className = 'border rounded-2xl p-3 shadow-md overflow-hidden relative transition-all duration-300';
                 
                 // Light pastel tint version of cycle color for element background
                 const cardBgColor = cycle.color === '#000000' ? '#f8fafc' : `${cycle.color}0d`;
@@ -488,11 +488,11 @@
                     const textCycleColor = cycle.color === '#000000' ? '#1e293b' : cycle.color;
 
                     if (isChecked) {
-                        packLabel.className = 'flex items-center gap-3.5 p-3.5 rounded-xl border transition-all cursor-pointer shadow-sm group';
+                        packLabel.className = 'flex items-center gap-3.5 p-2 rounded-xl border transition-all cursor-pointer shadow-sm group';
                         packLabel.style.backgroundColor = `${activeColor}22`;
                         packLabel.style.borderColor = activeColor;
                     } else {
-                        packLabel.className = 'flex items-center gap-3.5 p-3.5 rounded-xl border transition-all cursor-pointer shadow-sm group hover:border-amber-400';
+                        packLabel.className = 'flex items-center gap-3.5 p-2 rounded-xl border transition-all cursor-pointer shadow-sm group hover:border-amber-400';
                         packLabel.style.backgroundColor = cycle.color === '#000000' ? '#ffffff' : `${activeColor}0a`;
                         packLabel.style.borderColor = `${activeColor}25`;
                     }
