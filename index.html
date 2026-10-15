@@ -107,7 +107,7 @@
 <body class="min-h-screen flex flex-col bg-slate-100 text-slate-800">
 
     <header class="sticky top-0 z-50 bg-[#500] border-b border-amber-600/40 shadow-lg text-[#f3b217]">
-        <div class="max-w-9/10 mx-auto px-4 py-3 sm:px-6 lg:px-8">
+        <div class="max-w-[95%] mx-auto px-4 py-3 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-3">
                 <div class="flex items-center gap-3 shrink-0">
                     <div class="p-2 bg-[#660000] border border-amber-500/30 rounded-xl shadow-sm">
@@ -139,7 +139,7 @@
         </div>
     </header>
 
-    <main class="max-w-9/10 mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 w-full">
+    <main class="max-w-[95%] mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 w-full">
         <div class="flex flex-col lg:flex-row gap-6 items-start">
             
             <!-- LEFT FLOATING SIDEBAR (Controls & Search) -->
@@ -157,11 +157,18 @@
                 <!-- Progression Mode Option -->
                 <div class="pt-3 border-t border-slate-200">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">Filter Mode</label>
-                    <label class="flex items-start gap-3 cursor-pointer bg-amber-50/60 p-3 rounded-xl border border-amber-200 hover:border-amber-400 transition-all group">
+                    <label class="flex items-start gap-3 cursor-pointer bg-amber-50/60 p-3 rounded-xl border border-amber-200 hover:border-amber-400 transition-all group mb-2">
                         <input type="checkbox" id="progression-mode" class="checkbox-fantasy mt-0.5">
                         <div class="flex flex-col">
                             <span class="text-xs font-bold text-amber-800 uppercase tracking-wider group-hover:text-amber-900">Progression Mode</span>
                             <span class="text-[11px] text-slate-600 mt-1 leading-tight font-medium">Auto-selects all packs released on or prior to clicked pack's date</span>
+                        </div>
+                    </label>
+					<label class="flex items-start gap-3 cursor-pointer bg-lime-50/60 p-3 rounded-xl border border-lime-600 hover:border-lime-800 transition-all group">
+                        <input type="checkbox" id="legacy-mode" class="checkbox-fantasy mt-0.5" checked>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-lime-800 uppercase tracking-wider group-hover:text-lime-900">Legacy Only</span>
+                            <span class="text-[11px] text-slate-600 mt-1 leading-tight font-medium">Select only Original Release Model.</span>
                         </div>
                     </label>
                 </div>
@@ -195,7 +202,7 @@
                     <span id="selected-count-badge" class="text-xs bg-amber-100 text-amber-800 font-mono font-bold px-2.5 py-0.5 rounded-full border border-amber-300">0</span>
                 </div>
 
-                <!-- Tree View List Container (Generous bottom padding prevents last items from being covered) -->
+                <!-- Tree View List Container -->
                 <div id="selected-tree-container" class="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 min-h-0 pb-12">
                     <!-- Selected tree elements injected here -->
                 </div>
@@ -211,17 +218,33 @@
     <script>
         const CYCLES_DATA = [
             {
+                cycleName: "Core Set",
+                cycleCode: "Core",
+                color: "#550000",
+				order: 1,				
+                packs: [
+                    { name: "Core Set", code: "Core", release_date: "2011-04-20", packType: "Legacy" }
+                ]
+            },
+			{
+                cycleName: "Revised Core Set",
+                cycleCode: "RevCore",
+                color: "#A50000",
+                packs: [
+                    { name: "Revised Core Set", code: "RevCore", release_date: "2022-11-03", packType: "Revised" }
+                ]
+            },
+			{
                 cycleName: "Shadows of Mirkwood",
                 cycleCode: "SoM",
                 color: "#12613A",
                 packs: [
-                    { name: "Core Set", code: "Core", release_date: "2011-04-20" },
-                    { name: "The Hunt for Gollum", code: "HfG", release_date: "2011-07-21" },
-                    { name: "Conflict at the Carrock", code: "CatC", release_date: "2011-08-10" },
-                    { name: "A Journey to Rhosgobel", code: "JtR", release_date: "2011-09-01" },
-                    { name: "The Hills of Emyn Muil", code: "HoEM", release_date: "2011-09-30" },
-                    { name: "The Dead Marshes", code: "TDM", release_date: "2011-11-02" },
-                    { name: "Return to Mirkwood", code: "RtM", release_date: "2011-11-23" }
+                    { name: "The Hunt for Gollum", code: "HfG", release_date: "2011-07-21", packType: "Legacy" },
+                    { name: "Conflict at the Carrock", code: "CatC", release_date: "2011-08-10", packType: "Legacy" },
+                    { name: "A Journey to Rhosgobel", code: "JtR", release_date: "2011-09-01", packType: "Legacy" },
+                    { name: "The Hills of Emyn Muil", code: "HoEM", release_date: "2011-09-30", packType: "Legacy" },
+                    { name: "The Dead Marshes", code: "TDM", release_date: "2011-11-02", packType: "Legacy" },
+                    { name: "Return to Mirkwood", code: "RtM", release_date: "2011-11-23", packType: "Legacy" }
                 ]
             },
             {
@@ -229,13 +252,13 @@
                 cycleCode: "DD",
                 color: "#916836",
                 packs: [
-                    { name: "Khazad-dûm", code: "KD", release_date: "2012-01-06" },
-                    { name: "The Redhorn Gate", code: "TRG", release_date: "2012-03-01" },
-                    { name: "Road to Rivendell", code: "RtR", release_date: "2012-03-21" },
-                    { name: "The Watcher in the Water", code: "WitW", release_date: "2012-04-25" },
-                    { name: "The Long Dark", code: "TLD", release_date: "2012-05-16" },
-                    { name: "Foundations of Stone", code: "FoS", release_date: "2012-06-20" },
-                    { name: "Shadow and Flame", code: "SaF", release_date: "2012-08-08" }
+                    { name: "Khazad-dûm", code: "KD", release_date: "2012-01-06", packType: "Legacy" },
+                    { name: "The Redhorn Gate", code: "TRG", release_date: "2012-03-01", packType: "Legacy" },
+                    { name: "Road to Rivendell", code: "RtR", release_date: "2012-03-21", packType: "Legacy" },
+                    { name: "The Watcher in the Water", code: "WitW", release_date: "2012-04-25", packType: "Legacy" },
+                    { name: "The Long Dark", code: "TLD", release_date: "2012-05-16", packType: "Legacy" },
+                    { name: "Foundations of Stone", code: "FoS", release_date: "2012-06-20", packType: "Legacy" },
+                    { name: "Shadow and Flame", code: "SaF", release_date: "2012-08-08", packType: "Legacy" }
                 ]
             },
             {
@@ -243,13 +266,13 @@
                 cycleCode: "AtS",
                 color: "#99918A",
                 packs: [
-                    { name: "Heirs of Númenor", code: "HoN", release_date: "2012-11-26" },
-                    { name: "The Steward's Fear", code: "TSF", release_date: "2013-05-09" },
-                    { name: "The Drúadan Forest", code: "TDF", release_date: "2013-05-31" },
-                    { name: "Encounter at Amon Dîn", code: "EaAD", release_date: "2013-07-05" },
-                    { name: "Assault on Osgiliath", code: "AoO", release_date: "2013-08-09" },
-                    { name: "The Blood of Gondor", code: "BoG", release_date: "2013-10-17" },
-                    { name: "The Morgul Vale", code: "TMV", release_date: "2013-11-15" }
+                    { name: "Heirs of Númenor", code: "HoN", release_date: "2012-11-26", packType: "Legacy" },
+                    { name: "The Steward's Fear", code: "TSF", release_date: "2013-05-09", packType: "Legacy" },
+                    { name: "The Drúadan Forest", code: "TDF", release_date: "2013-05-31", packType: "Legacy" },
+                    { name: "Encounter at Amon Dîn", code: "EaAD", release_date: "2013-07-05", packType: "Legacy" },
+                    { name: "Assault on Osgiliath", code: "AoO", release_date: "2013-08-09", packType: "Legacy" },
+                    { name: "The Blood of Gondor", code: "BoG", release_date: "2013-10-17", packType: "Legacy" },
+                    { name: "The Morgul Vale", code: "TMV", release_date: "2013-11-15", packType: "Legacy" }
                 ]
             },
             {
@@ -257,13 +280,13 @@
                 cycleCode: "TRM",
                 color: "#665578",
                 packs: [
-                    { name: "The Voice of Isengard", code: "VoI", release_date: "2014-02-21" },
-                    { name: "The Dunland Trap", code: "TDT", release_date: "2014-06-26" },
-                    { name: "The Three Trials", code: "TTT", release_date: "2014-07-24" },
-                    { name: "Trouble in Tharbad", code: "TiT", release_date: "2014-08-21" },
-                    { name: "The Nîn-in-Eilph", code: "NiE", release_date: "2014-10-23" },
-                    { name: "Celebrimbor's Secret", code: "CS", release_date: "2014-11-13" },
-                    { name: "The Antlered Crown", code: "TAC", release_date: "2014-12-23" }
+                    { name: "The Voice of Isengard", code: "VoI", release_date: "2014-02-21", packType: "Legacy" },
+                    { name: "The Dunland Trap", code: "TDT", release_date: "2014-06-26", packType: "Legacy" },
+                    { name: "The Three Trials", code: "TTT", release_date: "2014-07-24", packType: "Legacy" },
+                    { name: "Trouble in Tharbad", code: "TiT", release_date: "2014-08-21", packType: "Legacy" },
+                    { name: "The Nîn-in-Eilph", code: "NiE", release_date: "2014-10-23", packType: "Legacy" },
+                    { name: "Celebrimbor's Secret", code: "CS", release_date: "2014-11-13", packType: "Legacy" },
+                    { name: "The Antlered Crown", code: "TAC", release_date: "2014-12-23", packType: "Legacy" }
                 ]
             },
             {
@@ -271,13 +294,13 @@
                 cycleCode: "AA",
                 color: "#36424D",
                 packs: [
-                    { name: "The Lost Realm", code: "TLR", release_date: "2015-04-03" },
-                    { name: "The Wastes of Eriador", code: "WoE", release_date: "2015-07-02" },
-                    { name: "Escape from Mount Gram", code: "EfMG", release_date: "2015-07-30" },
-                    { name: "Across the Ettenmoors", code: "AtE", release_date: "2015-09-03" },
-                    { name: "The Treachery of Rhudaur", code: "ToR", release_date: "2015-09-24" },
-                    { name: "The Battle of Carn Dûm", code: "BoCD", release_date: "2015-11-06" },
-                    { name: "The Dread Realm", code: "TDR", release_date: "2015-12-17" }
+                    { name: "The Lost Realm", code: "TLR", release_date: "2015-04-03", packType: "Legacy" },
+                    { name: "The Wastes of Eriador", code: "WoE", release_date: "2015-07-02", packType: "Legacy" },
+                    { name: "Escape from Mount Gram", code: "EfMG", release_date: "2015-07-30", packType: "Legacy" },
+                    { name: "Across the Ettenmoors", code: "AtE", release_date: "2015-09-03", packType: "Legacy" },
+                    { name: "The Treachery of Rhudaur", code: "ToR", release_date: "2015-09-24", packType: "Legacy" },
+                    { name: "The Battle of Carn Dûm", code: "BoCD", release_date: "2015-11-06", packType: "Legacy" },
+                    { name: "The Dread Realm", code: "TDR", release_date: "2015-12-17", packType: "Legacy" }
                 ]
             },
             {
@@ -285,13 +308,13 @@
                 cycleCode: "DC",
                 color: "#005578",
                 packs: [
-                    { name: "The Grey Havens", code: "TGH", release_date: "2016-02-11" },
-                    { name: "Flight of the Stormcaller", code: "FotS", release_date: "2016-05-05" },
-                    { name: "The Thing in the Depths", code: "TitD", release_date: "2016-06-02" },
-                    { name: "Temple of the Deceived", code: "TotD", release_date: "2016-06-30" },
-                    { name: "The Drowned Ruins", code: "DR", release_date: "2016-09-01" },
-                    { name: "A Storm on Cobas Haven", code: "SoCH", release_date: "2016-09-29" },
-                    { name: "The City of Corsairs", code: "CoC", release_date: "2016-10-27" }
+                    { name: "The Grey Havens", code: "TGH", release_date: "2016-02-11", packType: "Legacy" },
+                    { name: "Flight of the Stormcaller", code: "FotS", release_date: "2016-05-05", packType: "Legacy" },
+                    { name: "The Thing in the Depths", code: "TitD", release_date: "2016-06-02", packType: "Legacy" },
+                    { name: "Temple of the Deceived", code: "TotD", release_date: "2016-06-30", packType: "Legacy" },
+                    { name: "The Drowned Ruins", code: "DR", release_date: "2016-09-01", packType: "Legacy" },
+                    { name: "A Storm on Cobas Haven", code: "SoCH", release_date: "2016-09-29", packType: "Legacy" },
+                    { name: "The City of Corsairs", code: "CoC", release_date: "2016-10-27", packType: "Legacy" }
                 ]
             },
             {
@@ -299,13 +322,13 @@
                 cycleCode: "H",
                 color: "#862C31",
                 packs: [
-                    { name: "The Sands of Harad", code: "TSoH", release_date: "2016-11-23" },
-                    { name: "The Mûmakil", code: "M", release_date: "2017-01-30" },
-                    { name: "Race Across Harad", code: "RAH", release_date: "2017-04-01" },
-                    { name: "Beneath the Sands", code: "BtS", release_date: "2017-05-01" },
-                    { name: "The Black Serpent", code: "TBS", release_date: "2017-07-20" },
-                    { name: "The Dungeons of Cirith Gurat", code: "DoCG", release_date: "2017-12-07" },
-                    { name: "The Crossings of Poros", code: "CoP", release_date: "2018-02-08" }
+                    { name: "The Sands of Harad", code: "TSoH", release_date: "2016-11-23", packType: "Legacy" },
+                    { name: "The Mûmakil", code: "M", release_date: "2017-01-30", packType: "Legacy" },
+                    { name: "Race Across Harad", code: "RAH", release_date: "2017-04-01", packType: "Legacy" },
+                    { name: "Beneath the Sands", code: "BtS", release_date: "2017-05-01", packType: "Legacy" },
+                    { name: "The Black Serpent", code: "TBS", release_date: "2017-07-20", packType: "Legacy" },
+                    { name: "The Dungeons of Cirith Gurat", code: "DoCG", release_date: "2017-12-07", packType: "Legacy" },
+                    { name: "The Crossings of Poros", code: "CoP", release_date: "2018-02-08", packType: "Legacy" }
                 ]
             },
             {
@@ -313,41 +336,42 @@
                 cycleCode: "EM",
                 color: "#0C6D6C",
                 packs: [
-                    { name: "The Wilds of Rhovanion", code: "TWoR", release_date: "2018-06-14" },
-                    { name: "The Withered Heath", code: "TWH", release_date: "2018-08-16" },
-                    { name: "Roam Across Rhovanion", code: "RAR", release_date: "2018-10-18" },
-                    { name: "Fire in the Night", code: "FitN", release_date: "2018-12-07" },
-                    { name: "The Ghost of Framsburg", code: "TGoF", release_date: "2019-02-07" },
-                    { name: "Mount Gundabad", code: "MG", release_date: "2019-04-04" },
-                    { name: "The Fate of Wilderland", code: "TFoW", release_date: "2019-06-06" }
+                    { name: "The Wilds of Rhovanion", code: "TWoR", release_date: "2018-06-14", packType: "Legacy" },
+                    { name: "The Withered Heath", code: "TWH", release_date: "2018-08-16", packType: "Legacy" },
+                    { name: "Roam Across Rhovanion", code: "RAR", release_date: "2018-10-18", packType: "Legacy" },
+                    { name: "Fire in the Night", code: "FitN", release_date: "2018-12-07", packType: "Legacy" },
+                    { name: "The Ghost of Framsburg", code: "TGoF", release_date: "2019-02-07", packType: "Legacy" },
+                    { name: "Mount Gundabad", code: "MG", release_date: "2019-04-04", packType: "Legacy" },
+                    { name: "The Fate of Wilderland", code: "TFoW", release_date: "2019-06-06", packType: "Legacy" }
                 ]
             },
             {
                 cycleName: "The Vengeance of Mordor",
                 cycleCode: "TVoM",
                 color: "#49656A",
+				cycleType: "Legacy",
                 packs: [
-                    { name: "A Shadow in the East", code: "ASitE", release_date: "2019-08-02" },
-                    { name: "Wrath and Ruin", code: "WaR", release_date: "2019-11-15" },
-                    { name: "The City of Ulfast", code: "TCoU", release_date: "2020-01-10" },
-                    { name: "Challenge of the Wainriders", code: "CotW", release_date: "2020-02-07" },
-                    { name: "Under the Ash Mountains", code: "UtAM", release_date: "2020-06-01" },
-                    { name: "The Land of Sorrow", code: "TLoS", release_date: "2020-08-01" },
-                    { name: "The Fortress of Nurn", code: "TFoN", release_date: "2020-10-01" }
+                    { name: "A Shadow in the East", code: "ASitE", release_date: "2019-08-02", packType: "Legacy" },
+                    { name: "Wrath and Ruin", code: "WaR", release_date: "2019-11-15", packType: "Legacy" },
+                    { name: "The City of Ulfast", code: "TCoU", release_date: "2020-01-10", packType: "Legacy" },
+                    { name: "Challenge of the Wainriders", code: "CotW", release_date: "2020-02-07", packType: "Legacy" },
+                    { name: "Under the Ash Mountains", code: "UtAM", release_date: "2020-06-01", packType: "Legacy" },
+                    { name: "The Land of Sorrow", code: "TLoS", release_date: "2020-08-01", packType: "Legacy" },
+                    { name: "The Fortress of Nurn", code: "TFoN", release_date: "2020-10-01", packType: "Legacy" }
                 ]
             },
             {
                 cycleName: "ALeP - Oaths of the Rohirrim",
                 cycleCode: "OotR",
-                color: "#007ba7",
+                color: "#007ba7",				
                 packs: [
-                    { name: "ALeP - Children of Eorl", code: "CoE", release_date: "2021-03-22" },
-                    { name: "ALeP - The Aldburg Plot", code: "TAP", release_date: "2021-06-28" },
-                    { name: "ALeP - Fire on the Eastemnet", code: "FotE", release_date: "2021-09-09" },
-                    { name: "ALeP - The Gap of Rohan", code: "TGoR", release_date: "2021-12-07" },
-                    { name: "ALeP - The Glittering Caves", code: "TGC", release_date: "2022-02-22" },
-                    { name: "ALeP - Mustering of the Rohirrim", code: "MotR", release_date: "2022-06-13" },
-                    { name: "ALeP - Blood in the Isen", code: "BitI", release_date: "2022-09-09" }
+                    { name: "ALeP - Children of Eorl", code: "CoE", release_date: "2021-03-22", packType: "ALeP" },
+                    { name: "ALeP - The Aldburg Plot", code: "TAP", release_date: "2021-06-28", packType: "ALeP" },
+                    { name: "ALeP - Fire on the Eastemnet", code: "FotE", release_date: "2021-09-09", packType: "ALeP" },
+                    { name: "ALeP - The Gap of Rohan", code: "TGoR", release_date: "2021-12-07", packType: "ALeP" },
+                    { name: "ALeP - The Glittering Caves", code: "TGC", release_date: "2022-02-22", packType: "ALeP" },
+                    { name: "ALeP - Mustering of the Rohirrim", code: "MotR", release_date: "2022-06-13", packType: "ALeP" },
+                    { name: "ALeP - Blood in the Isen", code: "BitI", release_date: "2022-09-09", packType: "ALeP" }
                 ]
             },
             {
@@ -355,10 +379,10 @@
                 cycleCode: "TFS",
                 color: "#b26d91",
                 packs: [
-                    { name: "ALeP - The Shire's Reckoning", code: "TSR", release_date: "2024-02-29" },
-                    { name: "ALeP - Strange News in Bree", code: "SNiB", release_date: "2025-01-30" },
-                    { name: "ALeP - Fangs in the Dark", code: "FitD", release_date: "2025-06-30" },
-                    { name: "ALeP - The Brandywine Pursuit", code: "TBP", release_date: "2026-03-25" }
+                    { name: "ALeP - The Shire's Reckoning", code: "TSR", release_date: "2024-02-29", packType: "ALeP" },
+                    { name: "ALeP - Strange News in Bree", code: "SNiB", release_date: "2025-01-30", packType: "ALeP" },
+                    { name: "ALeP - Fangs in the Dark", code: "FitD", release_date: "2025-06-30", packType: "ALeP" },
+                    { name: "ALeP - The Brandywine Pursuit", code: "TBP", release_date: "2026-03-25", packType: "ALeP" }
                 ]
             },
             {
@@ -366,8 +390,8 @@
                 cycleCode: "TH",
                 color: "#AB6B38",
                 packs: [
-                    { name: "Over Hill and Under Hill", code: "OHaUH", release_date: "2012-08-17" },
-                    { name: "On the Doorstep", code: "OtD", release_date: "2013-02-22" }
+                    { name: "Over Hill and Under Hill", code: "OHaUH", release_date: "2012-08-17", packType: "Legacy" },
+                    { name: "On the Doorstep", code: "OtD", release_date: "2013-02-22", packType: "Legacy" }
                 ]
             },
             {
@@ -375,12 +399,12 @@
                 cycleCode: "LotR",
                 color: "#076F48",
                 packs: [
-                    { name: "The Black Riders", code: "TBR", release_date: "2013-09-01" },
-                    { name: "The Road Darkens", code: "TRD", release_date: "2014-10-03" },
-                    { name: "The Treason of Saruman", code: "ToS", release_date: "2015-04-23" },
-                    { name: "The Land of Shadow", code: "LoS", release_date: "2015-11-19" },
-                    { name: "The Flame of the West", code: "FotW", release_date: "2016-08-03" },
-                    { name: "The Mountain of Fire", code: "MoF", release_date: "2017-08-16" }
+                    { name: "The Black Riders", code: "TBR", release_date: "2013-09-01", packType: "Legacy" },
+                    { name: "The Road Darkens", code: "TRD", release_date: "2014-10-03", packType: "Legacy" },
+                    { name: "The Treason of Saruman", code: "ToS", release_date: "2015-04-23", packType: "Legacy" },
+                    { name: "The Land of Shadow", code: "LoS", release_date: "2015-11-19", packType: "Legacy" },
+                    { name: "The Flame of the West", code: "FotW", release_date: "2016-08-03", packType: "Legacy" },
+                    { name: "The Mountain of Fire", code: "MoF", release_date: "2017-08-16", packType: "Legacy" }
                 ]
             },
             {
@@ -388,15 +412,43 @@
                 cycleCode: "PoD",
                 color: "#000000",
                 packs: [
-                    { name: "The Dark of Mirkwood", code: "TDoM", release_date: "2011-04-22" },
-                    { name: "The Old Forest", code: "TOF", release_date: "2014-11-01" },
-                    { name: "Fog on the Barrow-downs", code: "FotBd", release_date: "2015-01-01" },
-                    { name: "The Hunt for the Dreadnaught", code: "THftD", release_date: "2020-12-01" },
-                    { name: "ALeP - The Scouring of the Shire", code: "TSotS", release_date: "2021-08-06" },
-                    { name: "ALeP - The Nine are Abroad", code: "TNaA", release_date: "2022-10-18" },
-                    { name: "ALeP - The Siege of Erebor", code: "TSoEr", release_date: "2023-09-06" },
-                    { name: "ALeP - The Hobbit", code: "THo", release_date: "2024-11-07" },
-                    { name: "ALeP - The Mirror of Galadriel", code: "TMoG", release_date: "2025-11-04" }
+                    { name: "The Dark of Mirkwood", code: "TDoM", release_date: "2011-04-22", packType: "PoD" },
+                    { name: "The Old Forest", code: "TOF", release_date: "2014-11-01", packType: "PoD" },
+                    { name: "Fog on the Barrow-downs", code: "FotBd", release_date: "2015-01-01", packType: "PoD" },
+                    { name: "The Hunt for the Dreadnaught", code: "THftD", release_date: "2020-12-01", packType: "PoD" },
+                    { name: "ALeP - The Scouring of the Shire", code: "TSotS", release_date: "2021-08-06", packType: "ALeP" },
+                    { name: "ALeP - The Nine are Abroad", code: "TNaA", release_date: "2022-10-18", packType: "ALeP" },
+                    { name: "ALeP - The Siege of Erebor", code: "TSoEr", release_date: "2023-09-06", packType: "ALeP" },
+                    { name: "ALeP - The Hobbit", code: "THo", release_date: "2024-11-07", packType: "ALeP" },
+                    { name: "ALeP - The Mirror of Galadriel", code: "TMoG", release_date: "2025-11-04", packType: "ALeP" }
+                ]
+            },
+            {
+                cycleName: "Two-Player Limited Edition Starter",
+                cycleCode: "Starter",
+                color: "#8d6833",
+                packs: [
+                    { name: "Two-Player Limited Edition Starter", code: "Starter", release_date: "2017-07-06", packType: "Starter" }
+                ]
+            },
+            {
+                cycleName: "Starter Decks",
+                cycleCode: "StarterDecks",
+                color: "#a63b33",
+                packs: [
+                    { name: "Dwarves of Durin", code: "DoD", release_date: "2022-11-04", packType: "StarterDecks" },
+                    { name: "Elves of Lórien", code: "EoL", release_date: "2022-11-04", packType: "StarterDecks" },
+                    { name: "Defenders of Gondor", code: "DoG", release_date: "2022-11-04", packType: "StarterDecks" },
+                    { name: "Riders of Rohan", code: "RoR", release_date: "2022-11-04", packType: "StarterDecks" }
+                ]
+            },
+            {
+                cycleName: "Messenger of the King Allies",
+                cycleCode: "MotKA",
+                color: "#555",
+                packs: [
+                    { name: "Messenger of the King Allies", code: "MotKA", release_date: "2020-07-30", packType: "MotKA" },
+                    { name: "ALeP - Messenger of the King Allies", code: "ALePMotKA", release_date: "2021-03-21", packType: "ALeP" }
                 ]
             }
         ];
@@ -410,23 +462,27 @@
 
         function renderPacks(searchTerm = '') {
             const container = document.getElementById('packs-container');
+            if (!container) return;
             container.innerHTML = '';
 
             const term = searchTerm.toLowerCase().trim();
+            const legacyElem = document.getElementById('legacy-mode');
+            const isLegacyOnly = legacyElem ? legacyElem.checked : false;
 
             CYCLES_DATA.forEach(cycle => {
-                const matchingPacks = cycle.packs.filter(p => 
-                    p.name.toLowerCase().includes(term) || 
-                    p.code.toLowerCase().includes(term) ||
-                    cycle.cycleName.toLowerCase().includes(term)
-                );
+                const matchingPacks = cycle.packs.filter(p => {
+                    const matchesSearch = p.name.toLowerCase().includes(term) || 
+                                          p.code.toLowerCase().includes(term) ||
+                                          cycle.cycleName.toLowerCase().includes(term);
+                    const matchesLegacy = !isLegacyOnly || p.packType === "Legacy";
+                    return matchesSearch && matchesLegacy;
+                });
 
                 if (matchingPacks.length === 0) return;
 
                 const cycleCard = document.createElement('div');
                 cycleCard.className = 'border rounded-2xl p-3 shadow-md overflow-hidden relative transition-all duration-300';
                 
-                // Light pastel tint version of cycle color for element background
                 const cardBgColor = cycle.color === '#000000' ? '#f8fafc' : `${cycle.color}0d`;
                 const cardBorderColor = cycle.color === '#000000' ? '#cbd5e1' : `${cycle.color}35`;
                 cycleCard.style.backgroundColor = cardBgColor;
@@ -453,8 +509,8 @@
                 cycleTitle.appendChild(titleText);
 
                 const codeBadge = document.createElement('a');
-				codeBadge.href = `https://ringsdb.com/cycle/${cycle.cycleCode}`;
-				codeBadge.target = '_blank';
+                codeBadge.href = `https://ringsdb.com/cycle/${cycle.cycleCode}`;
+                codeBadge.target = '_blank';
                 codeBadge.className = 'text-xs font-mono font-bold px-2 py-0.5 rounded border';
                 codeBadge.style.backgroundColor = `${cycle.color}15`;
                 codeBadge.style.borderColor = `${cycle.color}40`;
@@ -463,7 +519,9 @@
                 cycleTitle.appendChild(codeBadge);
 
                 // Cycle toggle button
-                const cycleAllSelected = cycle.packs.every(p => selectedPackCodes.has(p.code));
+                const cyclePacksToConsider = cycle.packs.filter(p => !isLegacyOnly || p.packType === "Legacy");
+                const cycleAllSelected = cyclePacksToConsider.length > 0 && cyclePacksToConsider.every(p => selectedPackCodes.has(p.code));
+                
                 const cycleToggleBtn = document.createElement('button');
                 cycleToggleBtn.className = 'text-xs font-semibold text-slate-600 hover:text-amber-700 transition-colors self-start sm:self-auto bg-slate-100 hover:bg-amber-50 px-3 py-1.5 rounded-lg border border-slate-200';
                 cycleToggleBtn.innerText = cycleAllSelected ? 'Deselect Cycle' : 'Select Cycle';
@@ -477,10 +535,7 @@
                 const packsGrid = document.createElement('div');
                 packsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5';
 
-                cycle.packs.forEach(pack => {
-                    const isVisible = matchingPacks.some(mp => mp.code === pack.code);
-                    if (!isVisible) return;
-
+                matchingPacks.forEach(pack => {
                     const packLabel = document.createElement('label');
                     const isChecked = selectedPackCodes.has(pack.code);
                     
@@ -522,7 +577,7 @@
             if (container.children.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                        <p class="text-sm font-medium">No packs or cycles matching "${searchTerm}"</p>
+                        <p class="text-sm font-medium">No packs or cycles matching "${searchTerm}"${isLegacyOnly ? ' in Legacy mode' : ''}</p>
                     </div>
                 `;
             }
@@ -533,12 +588,16 @@
 
         function handlePackToggle(pack, isChecked) {
             const isProgression = document.getElementById('progression-mode').checked;
+            const legacyElem = document.getElementById('legacy-mode');
+            const isLegacyOnly = legacyElem ? legacyElem.checked : false;
 
             if (isChecked) {
                 if (isProgression) {
                     ALL_PACKS_FLAT.forEach(p => {
                         if (p.release_date <= pack.release_date) {
-                            selectedPackCodes.add(p.code);
+                            if (!isLegacyOnly || p.packType === "Legacy") {
+                                selectedPackCodes.add(p.code);
+                            }
                         }
                     });
                 } else {
@@ -552,11 +611,16 @@
         }
 
         function toggleCycle(cycle, select) {
+            const legacyElem = document.getElementById('legacy-mode');
+            const isLegacyOnly = legacyElem ? legacyElem.checked : false;
+
             cycle.packs.forEach(p => {
-                if (select) {
-                    selectedPackCodes.add(p.code);
-                } else {
-                    selectedPackCodes.delete(p.code);
+                if (!isLegacyOnly || p.packType === "Legacy") {
+                    if (select) {
+                        selectedPackCodes.add(p.code);
+                    } else {
+                        selectedPackCodes.delete(p.code);
+                    }
                 }
             });
             renderPacks(document.getElementById('pack-search').value);
@@ -565,11 +629,19 @@
         function renderSelectedTree() {
             const treeContainer = document.getElementById('selected-tree-container');
             const badge = document.getElementById('selected-count-badge');
-            badge.innerText = selectedPackCodes.size;
+            if (!treeContainer || !badge) return;
 
+            const legacyElem = document.getElementById('legacy-mode');
+            const isLegacyOnly = legacyElem ? legacyElem.checked : false;
+
+            const visibleSelectedPacks = ALL_PACKS_FLAT.filter(p => 
+                selectedPackCodes.has(p.code) && (!isLegacyOnly || p.packType === "Legacy")
+            );
+
+            badge.innerText = visibleSelectedPacks.length;
             treeContainer.innerHTML = '';
 
-            if (selectedPackCodes.size === 0) {
+            if (visibleSelectedPacks.length === 0) {
                 treeContainer.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-full text-center py-10 px-4 text-slate-400 rounded-xl bg-slate-50 border border-slate-200 border-dashed">
                         <svg class="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
@@ -581,7 +653,9 @@
             }
 
             CYCLES_DATA.forEach(cycle => {
-                const selectedPacksInCycle = cycle.packs.filter(p => selectedPackCodes.has(p.code));
+                const selectedPacksInCycle = cycle.packs.filter(p => 
+                    selectedPackCodes.has(p.code) && (!isLegacyOnly || p.packType === "Legacy")
+                );
                 if (selectedPacksInCycle.length === 0) return;
 
                 const isCollapsed = collapsedTreeNodes.has(cycle.cycleCode);
@@ -630,7 +704,7 @@
 
                 cycleTreeNode.appendChild(cycleHeader);
 
-                // Leaf Nodes (Selected Packs inside cycle)
+                // Leaf Nodes (Selected Packs)
                 if (!isCollapsed) {
                     const packsList = document.createElement('div');
                     packsList.className = 'pl-7 pr-2 py-1.5 flex flex-col gap-1 bg-slate-50/40';
@@ -673,18 +747,22 @@
             const filterOutput = document.getElementById('filter-output');
             const copyBtn = document.getElementById('copy-btn');
             const openBtn = document.getElementById('open-ringsdb-btn');
+            if (!filterOutput || !copyBtn || !openBtn) return;
 
-            if (selectedPackCodes.size === 0) {
+            const legacyElem = document.getElementById('legacy-mode');
+            const isLegacyOnly = legacyElem ? legacyElem.checked : false;
+
+            const orderedSelectedCodes = ALL_PACKS_FLAT
+                .filter(p => selectedPackCodes.has(p.code) && (!isLegacyOnly || p.packType === "Legacy"))
+                .map(p => p.code);
+
+            if (orderedSelectedCodes.length === 0) {
                 filterOutput.innerText = 'Select packs to generate filter...';
                 filterOutput.style.color = '#f3b217aa';
                 copyBtn.disabled = true;
                 openBtn.disabled = true;
                 return;
             }
-
-            const orderedSelectedCodes = ALL_PACKS_FLAT
-                .filter(p => selectedPackCodes.has(p.code))
-                .map(p => p.code);
 
             const filterString = `e:${orderedSelectedCodes.join('|')}`;
 
@@ -716,6 +794,7 @@
 
         function showToast() {
             const toast = document.getElementById('toast');
+            if (!toast) return;
             toast.classList.remove('opacity-0');
             toast.classList.add('opacity-100');
             setTimeout(() => {
@@ -725,19 +804,40 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('pack-search').addEventListener('input', (e) => {
-                renderPacks(e.target.value);
-            });
+            const searchInput = document.getElementById('pack-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    renderPacks(e.target.value);
+                });
+            }
 
-            document.getElementById('select-all-btn').addEventListener('click', () => {
-                ALL_PACKS_FLAT.forEach(p => selectedPackCodes.add(p.code));
-                renderPacks(document.getElementById('pack-search').value);
-            });
+            const legacyElem = document.getElementById('legacy-mode');
+            if (legacyElem) {
+                legacyElem.addEventListener('change', () => {
+                    renderPacks(searchInput ? searchInput.value : '');
+                });
+            }
 
-            document.getElementById('clear-all-btn').addEventListener('click', () => {
-                selectedPackCodes.clear();
-                renderPacks(document.getElementById('pack-search').value);
-            });
+            const selectAllBtn = document.getElementById('select-all-btn');
+            if (selectAllBtn) {
+                selectAllBtn.addEventListener('click', () => {
+                    const isLegacyOnly = legacyElem ? legacyElem.checked : false;
+                    ALL_PACKS_FLAT.forEach(p => {
+                        if (!isLegacyOnly || p.packType === "Legacy") {
+                            selectedPackCodes.add(p.code);
+                        }
+                    });
+                    renderPacks(searchInput ? searchInput.value : '');
+                });
+            }
+
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            if (clearAllBtn) {
+                clearAllBtn.addEventListener('click', () => {
+                    selectedPackCodes.clear();
+                    renderPacks(searchInput ? searchInput.value : '');
+                });
+            }
 
             renderPacks();
         });
