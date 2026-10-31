@@ -509,7 +509,7 @@
                 cycleTitle.appendChild(titleText);
 
                 const codeBadge = document.createElement('a');
-                codeBadge.href = `https://ringsdb.com/cycle/${cycle.cycleCode}`;
+                codeBadge.href = `https://ringsdb.com/cycle/${cycle.cycleCode}/card`;
                 codeBadge.target = '_blank';
                 codeBadge.className = 'text-xs font-mono font-bold px-2 py-0.5 rounded border';
                 codeBadge.style.backgroundColor = `${cycle.color}15`;
@@ -557,7 +557,7 @@
                         <div class="flex flex-col min-w-0 flex-1">
                             <span class="text-sm font-bold leading-tight transition-colors" style="color: ${textCycleColor}">${pack.name}</span>
                             <div class="flex items-center gap-2 text-xs text-slate-500 mt-1 font-mono font-medium">
-                                <a class="bg-slate-200/80 px-1.5 py-0.2 rounded text-[11px] font-bold" style="color: ${textCycleColor}" target="_blank" href="https://ringsdb.com/set/${pack.code}">e:${pack.code}</a>
+                                <a class="bg-slate-200/80 px-1.5 py-0.2 rounded text-[11px] font-bold" style="color: ${textCycleColor}" target="_blank" href="https://ringsdb.com/set/${pack.code}/card">e:${pack.code}</a>
                                 <span>•</span>
                                 <span>${pack.release_date}</span>
                             </div>
